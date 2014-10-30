@@ -25,7 +25,7 @@
     <ul id="messages"></ul>
 
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="m" autocomplete="off" placeholder="Say something nice..." tabindex="0" /><button>Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -39,15 +39,15 @@
       });
 
       socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<li> style="display: none;"').text(msg).fadeIn());
       });
 
       socket.on('chat entered', function(msg){
-        $('#messages').append($('<li class="entered">').text(msg));
+        $('#messages').append($('<li class="entered" style="display: none;">').text(msg).fadeIn());
       });
 
       socket.on('chat left', function(msg){
-        $('#messages').append($('<li class="left">').text(msg));
+        $('#messages').append($('<li class="left" style="display: none;">').text(msg).fadeIn());
       });
     </script>
   </body>
