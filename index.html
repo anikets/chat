@@ -5,12 +5,15 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; background: #01A2A6; color: #fff; font-size: 17px; }
-      form { padding: 3px; position: fixed; bottom: 0; width: 100%; padding-left: 1%; margin-bottom: 1%; max-width: 1000px; left: 50%; transform: translateX(-50%); }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: 1%; transition: all 0.3s ease; position: relative; top: 0; }
-      form button {
-        width: 9%; background: #000; color: #fff; border: none; padding: 10px; background: #000;
+      form {
+        position: fixed; bottom: 0; width: 100%; transition: all 0.3s ease;
+        margin-bottom: 10px; max-width: 1000px; left: 50%; transform: translateX(-50%);
       }
-      #m:focus { box-shadow: 0px 10px 10px rgba(0,0,0,0.24); outline: none; top: -5px; }
+      form input { border: 0; padding: 10px; width: 90%; }
+      form button {
+        width: 10%; background: #000; color: #fff; border: none; padding: 10px; background: #000;
+      }
+      #m:focus { outline: none; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: rgba(0, 0, 0, 0.1); }
@@ -20,6 +23,7 @@
       #online { background: rgba(255,255,255,0.5); color: rgba(0,0,0,0.8); position: fixed; top: 10px; right: 10px; z-index: 10; padding: 10px; font-size: 12px; }
       #online:hover { background: #fff; }
       #online span { font-weight: bold; }
+      .inputting { box-shadow: 0px 10px 10px rgba(0,0,0,0.24); bottom: 5px; }
     </style>
   </head>
 
@@ -29,14 +33,20 @@
 
     <ul id="messages"></ul>
 
-    <form action="">
+    <form id='input-form' action="">
       <input id="m" autocomplete="off" placeholder="Say something nice..." tabindex="0" maxlength="500" /><button>Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      var $inputForm = $( '#input-form' );
       $( '#messages' ).css( 'padding-bottom', parseInt( $( 'form' ).css('height' )) + 30 );
+      $( 'input' ).on( 'focus', function(){
+        $inputForm.addClass( 'inputting' );
+      }).on( 'focusout', function() {
+        $inputForm.removeClass( 'inputting' );
+      });
 
       var socket = io();
       $('form').submit(function(){
