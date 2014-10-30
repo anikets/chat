@@ -6,12 +6,12 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; background: #01A2A6; color: #fff; font-size: 17px; }
       form {
-        position: fixed; bottom: 0; width: 100%; transition: all 0.3s ease;
+        position: fixed; bottom: 0; width: 98%; transition: all 0.3s ease; margin: auto;
         margin-bottom: 10px; max-width: 1000px; left: 50%; transform: translateX(-50%);
       }
       form input { border: 0; padding: 10px; width: 90%; }
       form button {
-        width: 10%; background: #000; color: #fff; border: none; padding: 10px; background: #000;
+        width: 10%; background: #000; color: #fff; border: none; padding: 10px; background: #000; cursor: pointer;
       }
       #m:focus { outline: none; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
@@ -24,6 +24,10 @@
       #online:hover { background: #fff; }
       #online span { font-weight: bold; }
       .inputting { box-shadow: 0px 10px 10px rgba(0,0,0,0.24); bottom: 5px; }
+      @media ( max-width: 767px ) {
+        #m { width: 80%; }
+        #input-form button { width: 20%; }
+      }
     </style>
   </head>
 
