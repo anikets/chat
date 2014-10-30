@@ -7,8 +7,8 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  console.log('a user connected', socket.handshake);
-  io.emit('chat entered', 'User joined');
+  console.log('a user connected');
+  io.emit('chat entered', { text:'User joined', users:io.sockets.sockets.length });
 
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
@@ -16,7 +16,7 @@ io.on('connection', function(socket){
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
-    io.emit('chat left', 'User left');
+    io.emit('chat left', { text:'User left', users:io.sockets.sockets.length });
   });
 });
 

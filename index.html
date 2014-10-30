@@ -16,11 +16,15 @@
       .entered, .left { font-size: 12px; color: #fff; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.5); }
       #messages li.entered { background: #646464; }
       #messages li.left { background: #9D9D9D; }
+      #online { background: rgba(255,255,255,0.5); color: rgba(0,0,0,0.8); position: fixed; top: 10px; right: 10px; z-index: 10; padding: 10px; font-size: 12px; }
+      #online:hover { background: #fff; }
+      #online span { font-weight: bold; }
     </style>
   </head>
 
 
   <body>
+    <div id='online'>Users online:<span></span></div>
 
     <ul id="messages"></ul>
 
@@ -33,21 +37,24 @@
     <script>
       var socket = io();
       $('form').submit(function(){
+        if ( $( '#m' ).val() === '' ) return false;
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
         return false;
       });
 
       socket.on('chat message', function(msg){
-        $('#messages').append($('<li> style="display: none;"').text(msg).fadeIn());
+        $( '#messages' ).append($( '<li> style="display: none;"' ).text( msg ).fadeIn());
       });
 
       socket.on('chat entered', function(msg){
-        $('#messages').append($('<li class="entered" style="display: none;">').text(msg).fadeIn());
+        $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).text( msg.text ).fadeIn());
+        $( '#online > span' ).text( msg.users );
       });
 
       socket.on('chat left', function(msg){
-        $('#messages').append($('<li class="left" style="display: none;">').text(msg).fadeIn());
+        $( '#messages' ).append($( '<li class="left" style="display: none;">' ).text( msg.text ).fadeIn());
+        $( '#online > span' ).text( msg.users );
       });
     </script>
   </body>
