@@ -11,6 +11,9 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .entered, .left {  font-size: 12px; font-weight: bold; color: #fff; text-align: center; }
+      #messages li.entered { background: green; }
+      #messages li.left { background: orange; }
     </style>
   </head>
 
@@ -35,6 +38,14 @@
 
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
+      });
+
+      socket.on('chat entered', function(msg){
+        $('#messages').append($('<li class="entered">').text(msg));
+      });
+
+      socket.on('chat left', function(msg){
+        $('#messages').append($('<li class="left">').text(msg));
       });
     </script>
   </body>
