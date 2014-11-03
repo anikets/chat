@@ -13,6 +13,7 @@
     "socket.io"
   ],
   "author": "Aniket A. Suryavanshi",
+  "repository": "https://github.com/anikets/chat",
   "license": "ISC",
   "dependencies": {
     "express": "^4.10.1",
