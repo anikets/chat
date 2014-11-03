@@ -49,7 +49,10 @@
     </div>
 
     <div id='chat-area'>
-      <div id='online'>Users online:<span></span></div>
+      <div id='online'>
+        Users online:<span></span>
+        <ul></ul>
+      </div>
 
       <ul id="messages"></ul>
 
@@ -65,6 +68,13 @@
     <script>
       var initChat = function() {
         var socket = io();
+
+        var populateChatList = function( list ) {
+          $( '#online ul' ).html( '' ); // Clear list.
+          for( var c = 0; c < list.length; c++ ) {
+            $( '#online ul' ).append( '<li>' + list[ c ] + '</li>' );
+          }
+        };
 
           $( '#create-user' ).slideUp( function() {
             $( '#chat-area' ).slideDown();
@@ -86,12 +96,14 @@
           $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
           $("html, body").animate({ scrollTop: $(document).height() }, 300);
           $( '#online > span' ).text( msg.users );
+          populateChatList( msg.ul );
         });
 
         socket.on('chat left', function(msg){
           $( '#messages' ).append($( '<li class="left" style="display: none;">' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
           $("html, body").animate({ scrollTop: $(document).height() }, 300);
           $( '#online > span' ).text( msg.users );
+          populateChatList( msg.ul );
         });
 
         var ut = function() {

@@ -2,6 +2,8 @@ var express = require('express');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var users = [];
+var uo = [];  // Users online.
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/vendor'));
@@ -11,6 +13,7 @@ app.get('/', function(req, res){
 });
 
 io.on( 'connection', function( socket ){
+
   // Associate a username with the created socket.
   var cookies = socket.handshake.headers.cookie.split( ' ' );
   for ( var c = 0; cookies[c]; c++ ) {
@@ -19,9 +22,20 @@ io.on( 'connection', function( socket ){
     }
   }
 
+  // Check if username is unique.
+  var found = false;
+  console.log( users, socket.__un )
+  if ( users.length > 0 ) {
+    for ( var c = 0; users[ c ] && !found; c++ ) {
+      if ( users[ c ] === socket.__un ) console.log( 'username already exists. ===============' );
+      else users.push( socket.__un );
+    }
+  }
+  else users.push( socket.__un );
+
   console.log( 'User connected:', socket.__un );
 
-  io.emit('chat entered', { text: socket.__un + ' joined', users:io.sockets.sockets.length, time: new Date() });
+  io.emit('chat entered', { text: socket.__un + ' joined', users:io.sockets.sockets.length, time: new Date(), ul: users });
 
   socket.on('chat message', function(msg){
     socket.__un = msg.u;
@@ -31,7 +45,12 @@ io.on( 'connection', function( socket ){
 
   socket.on('disconnect', function(){
     console.log( 'user disconnected', socket.__un );
-    io.emit('chat left', { text: socket.__un + ' left', users:io.sockets.sockets.length, time: new Date() });
+    io.emit('chat left', { text: socket.__un + ' left', users:io.sockets.sockets.length, time: new Date(), ul: users });
+    // Find and remove item from an array
+    var i = users.indexOf(socket.__un);
+    if(i != -1) {
+      users.splice(i, 1);
+    }
   });
 });
 
