@@ -66,21 +66,28 @@
 
       socket.on('chat message', function(msg){
         console.log(msg.time);
-        $( '#messages' ).append($( '<li> style="display: none;"' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
+        $( '#messages' ).append($( '<li> style="display: none;"' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
       });
 
       socket.on('chat entered', function(msg){
-        $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
+        $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
         $( '#online > span' ).text( msg.users );
       });
 
       socket.on('chat left', function(msg){
-        $( '#messages' ).append($( '<li class="left" style="display: none;">' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
+        $( '#messages' ).append($( '<li class="left" style="display: none;">' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
         $( '#online > span' ).text( msg.users );
       });
+
+      var ut = function() {
+        $( '#messages .ts' ).each( function( i, v ) {
+          $( this ).text( moment( $( this ).data( 'time' )).fromNow());
+        });
+      };
+      setInterval( ut, 1000 );
     </script>
   </body>
 </html>
