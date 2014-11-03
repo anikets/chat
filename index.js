@@ -10,17 +10,28 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
+io.on( 'connection', function( socket ){
   console.log('a user connected');
-  io.emit('chat entered', { text:'User joined', users:io.sockets.sockets.length, time: new Date() });
+
+  // Associate a username with the created socket.
+  var cookies = socket.handshake.headers.cookie.split( ' ' );
+  for ( var c = 0; cookies[c]; c++ ) {
+    if ( cookies[c].search( '__acun__' ) >= 0 ) {
+      socket.__un = cookies[c].split( '=' )[ 1 ]; 
+    }
+  }
+
+  io.emit('chat entered', { text: socket.__un + ' joined', users:io.sockets.sockets.length, time: new Date() });
 
   socket.on('chat message', function(msg){
-    io.emit('chat message', { text: msg, time: new Date() });
+    socket.__un = msg.u;
+    console.log( 'msg: ', msg );
+    io.emit('chat message', { text: msg.t, time: new Date(), u: socket.__un });
   });
 
   socket.on('disconnect', function(){
-    console.log('user disconnected');
-    io.emit('chat left', { text:'User left', users:io.sockets.sockets.length, time: new Date() });
+    console.log( 'user disconnected', socket.__un );
+    io.emit('chat left', { text: socket.__un + ' left', users:io.sockets.sockets.length, time: new Date() });
   });
 });
 

@@ -31,7 +31,7 @@
       #messages li { float: none; clear: both; }
       #messages li:after { content: ''; display: table; }
       .ts { float: right; color: rgba(255, 255, 255, 0.6); font-size: 14px; }
-      #create-user { width: 80%; margin: 15% auto 0 auto; }
+      #create-user { display: none; width: 80%; margin: 15% auto 0 auto; }
       .clearfix { clear: both; float: none; }
       .clearfix:after { content: ''; display: table; }
       #create-user input { display: block; font-size: 40px; line-height: 70px; width: 80%; float: left; border: 0; padding-left: 2%; }
@@ -60,40 +60,25 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="moment.min.js"></script>
+    <script src="cookie.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-      // Prompt for username
-      $( '#start-chat' ).click( function() {
-        if ( $( '#username' ).val() == '' ) return;
-        else if ( $( '#username' ).val().length > 50 ) return;
-        $( '#create-user' ).slideUp( function() {
-          $( '#chat-area' ).slideDown();
-        });
-      });
-
-
-      var $inputForm = $( '#input-form' );
-      $( '#messages' ).css( 'padding-bottom', parseInt( $( 'form' ).css('height' )) + 30 );
-      $( 'input' ).on( 'focus', function(){
-        $inputForm.addClass( 'inputting' );
-      }).on( 'focusout', function() {
-        $inputForm.removeClass( 'inputting' );
-        initChat();
-      });
-
-
       var initChat = function() {
         var socket = io();
 
+          $( '#create-user' ).slideUp( function() {
+            $( '#chat-area' ).slideDown();
+          });
+
         $('form').submit(function(){
           if ( $( '#m' ).val() === '' ) return false;
-          socket.emit('chat message', $('#m').val());
+          socket.emit('chat message', { t: $('#m').val(), u: docCookies.getItem('__acun__') });
           $('#m').val('');
           return false;
         });
 
         socket.on('chat message', function(msg){
-          $( '#messages' ).append($( '<li> style="display: none;"' ).html( msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
+          $( '#messages' ).append($( '<li> style="display: none;"' ).html( msg.u + ': ' + msg.text + '<div class="ts" title="' + new Date( msg.time ) + '" data-time="' + msg.time + '">' + moment( msg.time ).fromNow() + '</em>' ).fadeIn());
           $("html, body").animate({ scrollTop: $(document).height() }, 300);
         });
 
@@ -116,6 +101,33 @@
         };
         setInterval( ut, 1000 );
       }; // End initChat.
+
+
+      // Check if user had already created a username.
+      if( docCookies.getItem( '__acun__' ) !== null ) {
+        $( 'body' ).prepend( '<div class="alert">Joined as <strong>' + docCookies.getItem( '__acun__' ) + '</strong></div>' );
+        initChat();
+      }
+      else {
+        // Prompt for username
+        $( '#create-user' ).fadeIn();
+        $( '#start-chat' ).click( function() {
+          if ( $( '#username' ).val() == '' ) return;
+          else if ( $( '#username' ).val().length > 50 ) return;
+          docCookies.setItem( '__acun__', $( '#username' ).val());
+          initChat();
+        });
+      }
+
+
+      var $inputForm = $( '#input-form' );
+      $( '#messages' ).css( 'padding-bottom', parseInt( $( 'form' ).css('height' )) + 30 );
+      $( 'input' ).on( 'focus', function(){
+        $inputForm.addClass( 'inputting' );
+      }).on( 'focusout', function() {
+        $inputForm.removeClass( 'inputting' );
+      });
+
 
     </script>
   </body>
