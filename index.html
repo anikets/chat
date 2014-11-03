@@ -28,6 +28,9 @@
         #m { width: 80%; }
         #input-form button { width: 20%; }
       }
+      #messages li { float: none; clear: both; }
+      #messages li:after { content: ''; display: table; }
+      .ts { float: right; color: rgba(255, 255, 255, 0.6); font-size: 14px; }
     </style>
   </head>
 
@@ -61,18 +64,19 @@
       });
 
       socket.on('chat message', function(msg){
-        $( '#messages' ).append($( '<li> style="display: none;"' ).text( msg ).fadeIn());
+        console.log(msg.time);
+        $( '#messages' ).append($( '<li> style="display: none;"' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
       });
 
       socket.on('chat entered', function(msg){
-        $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).text( msg.text ).fadeIn());
+        $( '#messages' ).append($( '<li class="entered" style="display: none;">' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
         $( '#online > span' ).text( msg.users );
       });
 
       socket.on('chat left', function(msg){
-        $( '#messages' ).append($( '<li class="left" style="display: none;">' ).text( msg.text ).fadeIn());
+        $( '#messages' ).append($( '<li class="left" style="display: none;">' ).html( msg.text + '<div class="ts">' + new Date( msg.time ) + '</em>' ).fadeIn());
         $("html, body").animate({ scrollTop: $(document).height() }, 300);
         $( '#online > span' ).text( msg.users );
       });
