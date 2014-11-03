@@ -11,8 +11,6 @@ app.get('/', function(req, res){
 });
 
 io.on( 'connection', function( socket ){
-  console.log('a user connected');
-
   // Associate a username with the created socket.
   var cookies = socket.handshake.headers.cookie.split( ' ' );
   for ( var c = 0; cookies[c]; c++ ) {
@@ -20,6 +18,8 @@ io.on( 'connection', function( socket ){
       socket.__un = cookies[c].split( '=' )[ 1 ]; 
     }
   }
+
+  console.log( 'User connected:', socket.__un );
 
   io.emit('chat entered', { text: socket.__un + ' joined', users:io.sockets.sockets.length, time: new Date() });
 
