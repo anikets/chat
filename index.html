@@ -80,6 +80,7 @@
         var socket = io();
 
         var populateChatList = function( list ) {
+          return; /// Work on this function later.
           $( '#online ul' ).html( '' ); // Clear list.
           for( var c = 0; c < list.length; c++ ) {
             $( '#online ul' ).append( '<li>' + list[ c ] + '</li>' );
