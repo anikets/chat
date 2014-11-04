@@ -117,6 +117,38 @@
           populateChatList( msg.ul );
         });
 
+        socket.on( 'connect', function(){
+          console.info( 'connect' );
+        });
+
+        socket.on( 'error', function( err ){
+          console.info( 'error', err );
+        });
+
+        socket.on( 'disconnect', function(){
+          console.info( 'disconnect' );
+        });
+
+        socket.on( 'reconnect', function( num ){
+          console.info( 'connect', num );
+        });
+
+        socket.on( 'reconnect_attempt', function(){
+          console.info( 'reconnect_attempt' );
+        });
+
+        socket.on( 'reconnecting', function( num ){
+          console.info( 'reconnecting', num );
+        });
+
+        socket.on( 'reconnect_error', function( err){
+          console.info( 'reconnect_error', err );
+        });
+
+        socket.on( 'reconnect_failed', function(){
+          console.info( 'reconnect_failed' );
+        });
+
         var ut = function() {
           $( '#messages .ts' ).each( function( i, v ) {
             $( this ).text( moment( $( this ).data( 'time' )).fromNow());
