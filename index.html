@@ -29,7 +29,7 @@
       }
       #messages li { float: none; clear: both; }
       #messages li:after { content: ''; display: table; }
-      .ts { float: right; color: rgba(255, 255, 255, 0.6); font-size: 14px; min-width: 150px; }
+      .ts { float: right; text-align: right; color: rgba(255, 255, 255, 0.6); font-size: 14px; min-width: 150px; }
       #create-user { display: none; width: 80%; margin: 15% auto 0 auto; }
       .clearfix { clear: both; float: none; }
       .clearfix:after { content: ''; display: table; }
@@ -75,7 +75,7 @@
       var _ch = {
         // Chat Helpers
         welcomeUser: function() {
-          $( '.sidebar' ).prepend( '<div>Welcome <strong>' + docCookies.getItem( '__acun__' ) + '</strong></div><a href="#" id="logout">Logout</a>' );
+          $( '.sidebar' ).prepend( '<div>Welcome <strong title="Your username">' + docCookies.getItem( '__acun__' ) + '</strong></div><a href="#" id="logout">Logout</a>' );
         }
       };
       var initChat = function() {
