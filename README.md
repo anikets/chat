@@ -1,3 +1,11 @@
+# Chat App
+
+# To-dos:
+* Authentication
+* Socket.io namespaces
+* Invite a person
+* 3rd party API integration
+
 Git Remotes:
 
 gh  git@github.com:anikets/chat.git (fetch)
